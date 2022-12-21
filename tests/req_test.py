@@ -1,12 +1,13 @@
 import requests
+
 from config import SERVICE_URL
 from src.enums.global_enums import GlobalErrorMessages
+from src.baseclasses.response_jsonschema import Response
+from src.schemas.post_jsonschema import POST_SCHEMA
 
 
 def test_getting_posts():
-    response = requests.get(url=SERVICE_URL)
-    received_posts = response.json()
-
-    assert response.status_code == 200, GlobalErrorMessages.WRONG_STATUS_CODE.value
-    assert len(received_posts) == 5, GlobalErrorMessages.WRONG_ELEMENTS_COUNT.value
-
+    r = requests.get(url=SERVICE_URL)
+    response = Response(r)
+    response.assert_response_status_code(200).validate(POST_SCHEMA)
+    response.validate(POST_SCHEMA)
